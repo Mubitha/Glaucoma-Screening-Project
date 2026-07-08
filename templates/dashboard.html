@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+  <div class="welcome-card">
+    <h1>Welcome {{ name }} 👋</h1>
+    <p>AI-Based Early Childhood Glaucoma Risk Screening</p>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <h2>Live Scanner</h2>
+      <p>Use webcam to capture eye image</p>
+      <a href="{{ url_for('scan') }}">
+        <button>Start Scanner</button>
+      </a>
+    </div>
+
+    <div class="card">
+      <h2>Upload Image</h2>
+      <p>Upload eye image for screening</p>
+      <a href="{{ url_for('upload') }}">
+        <button>Upload</button>
+      </a>
+    </div>
+
+    <div class="card">
+      <h2>Contact Us</h2>
+      <p>Send your queries</p>
+      <a href="{{ url_for('contact') }}">
+        <button>Contact Us</button>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

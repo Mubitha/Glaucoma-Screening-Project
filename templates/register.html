@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Registration</title>
+  <link rel="stylesheet" href="/static/register.css">
+  </head>
+<body>
+
+{% if success %}
+
+<!-- FIRST SUCCESS CARD -->
+<div class="success-card" id="successCard1">
+  <h2> Registered Successfully!</h2>
+  <p>Welcome, {{ form_data.full_name }}! Thank you for registering.</p>
+  <button class="login-btn" onclick="showNextCard()">Next</button>
+</div>
+
+<!-- SECOND CONFIRMATION CARD -->
+<div class="success-card hidden" id="successCard2">
+  <h2>Stay Logged In?</h2>
+  <p>Do you want to continue to dashboard?</p>
+
+  <button class="login-btn" onclick="goDashboard()">Yes</button>
+  <button class="cancel-btn" onclick="goHome()">No</button>
+</div>
+
+<script>
+function showNextCard(){
+  document.getElementById("successCard1").classList.add("hidden");
+  document.getElementById("successCard2").classList.remove("hidden");
+}
+
+function goDashboard(){
+  window.location.href = "{{ url_for('dashboard') }}";
+}
+
+function goHome(){
+  window.location.href = "{{ url_for('home') }}";
+}
+</script>
+
+{% else %}
+
+  <!-- REGISTRATION FORM -->
+  <div class="form-container">
+    <h2>Patient Registration</h2>
+
+    <form method="POST" action="{{ url_for('register') }}">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="full_name" placeholder="Enter your full name" required
+             value="{{ form_data.full_name if form_data.full_name }}">
+
+      <label for="dob">Date of Birth</label>
+      <input type="date" id="dob" name="dob" required
+             value="{{ form_data.dob if form_data.dob }}">
+
+      <label for="gender">Gender</label>
+      <select id="gender" name="gender" required>
+        <option value="" disabled {% if not form_data.gender %}selected{% endif %}>Select your gender</option>
+        <option value="Male" {% if form_data.gender=='Male' %}selected{% endif %}>Male</option>
+        <option value="Female" {% if form_data.gender=='Female' %}selected{% endif %}>Female</option>
+        <option value="Other" {% if form_data.gender=='Other' %}selected{% endif %}>Other</option>
+      </select>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required
+             value="{{ form_data.email if form_data.email }}">
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+      <button type="submit" class="submit-btn">Register</button>
+    </form>
+
+    <!-- FLASH MESSAGES BELOW FORM -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message {% if category=='success' %}flash-success{% else %}flash-danger{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- AUTO HIDE ERROR MESSAGE -->
+  <script>
+    setTimeout(() => {
+      const msgs = document.querySelectorAll('.flash-message');
+      msgs.forEach(msg => msg.style.display = 'none');
+    }, 3000); // hide after 5 seconds
+  </script>
+{% endif %}
+
+</body>
+</html>

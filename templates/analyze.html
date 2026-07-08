@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Glaucoma Screening</title>
+    <style>
+        body {
+            background-color: #edf1f3;
+            color: white;
+            text-align: center;
+            font-family: Arial;
+        }
+
+        img {
+            margin-top: 20px;
+            max-width: 400px;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<h2>AI Glaucoma Risk Screening</h2>
+
+<input type="file" id="imageInput">
+<br><br>
+<button onclick="analyzeImage()">Analyze</button>
+
+<div id="preview"></div>
+
+<div class="result-box" id="resultBox">
+    <h3>Result</h3>
+    <p id="cdr"></p>
+    <p id="risk"></p>
+    <p id="recommendation"></p>
+</div>
+
+<script>
+function analyzeImage() {
+
+    let input = document.getElementById("imageInput");
+    let file = input.files[0];
+
+    if (!file) {
+        alert("Please select image");
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append("image", file);
+
+    fetch("/analyze", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        document.getElementById("preview").innerHTML =
+            `<img src="${data.image_path}">`;
+
+        document.getElementById("resultBox").style.display = "block";
+        document.getElementById("cdr").innerText =
+            "CDR Value: " + data.cdr;
+
+        document.getElementById("risk").innerText =
+            "Risk Level: " + data.risk_category;
+
+        document.getElementById("recommendation").innerText =
+            "Recommendation: " + data.recommendation;
+    });
+}
+</script>
+
+</body>
+</html>

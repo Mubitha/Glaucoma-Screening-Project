@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Messages</title>
+    <style>
+        body { font-family: Arial; background:#f4f6f9; }
+        table {
+            width: 95%;
+            margin: 40px auto;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #2c3e50;
+            color: white;
+        }
+        tr:hover { background:#f2f2f2; }
+        h2 { text-align:center; margin-top:20px; }
+    </style>
+</head>
+<body>
+
+<h2>Contact Messages ({{ total_contacts }})</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>User ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Message</th>
+        <th>Date</th>
+    </tr>
+
+    {% for row in rows %}
+    <tr>
+        <td>{{ row.id }}</td>
+        <td>{{ row.user_id }}</td>
+        <td>{{ row.name }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.message }}</td>
+        <td>{{ row.created_at }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>

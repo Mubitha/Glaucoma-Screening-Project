@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Based Childhood Glaucoma</title>
+
+    <!-- Flask static CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="menu">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="#about">About</a>
+            <a href="{{ url_for('glaucoma') }}">Glaucoma</a>
+            <a href="{{ url_for('treatment') }}">Treatment</a>
+            <a href="{{ url_for('resources') }}">Resources</a>
+        </div>
+
+        <div class="auth-buttons">
+            <button class="login">
+                <a href="{{ url_for('login') }}">Login</a>
+            </button>
+            <button class="register">
+                <a href="{{ url_for('register') }}">Register</a>
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADING -->
+    <div class="heading">
+         AI-Based Early Childhood Glaucoma Risk Screening System 
+                 
+    </div>
+
+    <!-- IMAGE -->
+     <div class="image-container">
+        <img src="{{ url_for('static', filename='img.jpg.jfif')}}">
+</div>
+
+    
+
+    <!-- ABOUT SECTION -->
+        <section id="about" class="about-section">
+    <div class="about-card">
+
+        <h2>About Us</h2>
+        <p>
+            Early childhood glaucoma is a serious eye disorder that can cause permanent vision loss
+            if not detected at an early stage. This AI-based system analyzes eye images to identify
+            potential glaucoma risk in children and assists doctors in early diagnosis.
+        </p>
+    </div>
+</section>
+
+
+ <!-- ================= PROBLEM SECTION ================= -->
+<section class="long-section">
+    <h2>Why Early Detection is Important?</h2>
+    <p>
+        Childhood glaucoma can silently damage vision if not diagnosed early.
+        Many children may not express symptoms clearly, making AI-assisted
+        screening crucial for timely medical intervention.
+    </p>
+</section>
+
+<!-- ================= SYSTEM WORKFLOW ================= -->
+<section class="long-section light-bg">
+    <h2>Complete System Workflow</h2>
+
+    <div class="workflow-container">
+        <div class="workflow-box">
+            <h3>Step 1: User Registration</h3>
+            <p>Parents or doctors securely register in the system.</p>
+        </div>
+
+        <div class="workflow-box">
+            <h3>Step 2: Patient Data Entry</h3>
+            <p>Child’s medical and eye details are entered into the system.</p>
+        </div>
+
+        <div class="workflow-box">
+            <h3>Step 3: AI Risk Analysis</h3>
+            <p>The AI model analyzes data and predicts glaucoma risk level.</p>
+        </div>
+
+        <div class="workflow-box">
+            <h3>Step 4: Dashboard Results</h3>
+            <p>Users can view risk reports and recommended next steps.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ================= FEATURES SECTION ================= -->
+<section class="long-section">
+    <h2>Key Features of Our AI System</h2>
+
+    <div class="features-container">
+        <div class="feature-card">
+            <h3>🧠 Intelligent AI Prediction</h3>
+            <p>Advanced machine learning ensures early risk identification.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>📊 Patient Dashboard</h3>
+            <p>Track screening results and patient records efficiently.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>🔐 Secure Authentication</h3>
+            <p>Role-based login with encrypted data storage.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>👩‍⚕️ Doctor Support System</h3>
+            <p>AI assists medical professionals in decision making.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ================= BENEFITS SECTION ================= -->
+<section class="long-section light-bg">
+    <h2>Benefits for Parents & Doctors</h2>
+
+    <div class="benefits-container">
+        <div>
+            <h3>For Parents</h3>
+            <ul>
+                <li>✔ Early warning system</li>
+                <li>✔ Prevents permanent vision loss</li>
+                <li>✔ Easy registration and tracking</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>For Doctors</h3>
+            <ul>
+                <li>✔ AI-assisted diagnosis</li>
+                <li>✔ Faster screening process</li>
+                <li>✔ Organized patient records</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section class="long-section cta-section">
+    <h2>Protect Your Child’s Vision Today</h2>
+    <p>Start early screening and ensure a brighter future.</p>
+    <a href="{{ url_for('register') }}" class="cta-btn">Register Now</a>
+</section>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-contact">
+            <h3>Contact Us</h3>
+            <div class="contact-grid">
+                <div class="contact-block">
+                    <p><strong>Address</strong></p>
+                    <p>123 AI Glaucoma Research Center, Chennai, India</p>
+                </div>
+                <div class="contact-block">
+                    <p><strong>Email</strong></p>
+                    <p>
+                        <a href="mailto:info@glaucomaai.com">
+                            info@glaucomaai.com
+                        </a>
+                    </p>
+                </div>
+                <div class="contact-block">
+                    <p><strong>Phone</strong></p>
+                    <p>+91 9876543210</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2026 AI Glaucoma Project. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Flask static JS -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

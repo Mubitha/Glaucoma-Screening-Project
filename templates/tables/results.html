@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Screening Results</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+min-height:100vh;
+background:
+linear-gradient(rgba(12,24,49,0.7),rgba(10,20,40,0.7)),
+url("{{ url_for('static', filename='AI-powered glaucoma risk screening system.png') }}")
+no-repeat center center fixed;
+background-size:cover;
+color:#fff;
+}
+
+.header{
+text-align:center;
+padding:110px 20px 90px;
+}
+
+.cards{
+display:flex;
+justify-content:center;
+gap:60px;
+flex-wrap:wrap;
+margin-bottom:60px;
+  margin-top:50px;
+
+}
+
+.card{
+width:260px;
+padding:40px;
+border-radius:20px;
+text-align:center;
+backdrop-filter:blur(14px);
+background:rgba(255,255,255,.12);
+box-shadow:0 20px 40px rgba(0,0,0,.4);
+transition:.3s;
+color:white;
+text-decoration:none;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+.total{ border-left:6px solid #22c55e; }
+.low{ border-left:6px solid #baf310; }
+.medium{ border-left:6px solid #f59e0b; }
+.high{ border-left:6px solid #ef4444; }
+
+.count{
+font-size:38px;
+font-weight:700;
+}
+
+.back-btn{
+display:block;
+width:120px;
+margin:20px auto;
+padding:8px;
+background:#2563eb;
+border-radius:8px;
+text-decoration:none;
+color:white;
+text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>Glaucoma Screening Results</h1>
+</div>
+
+<div class="cards">
+
+<a href="{{ url_for('view_results', category='ALL') }}" class="card total">
+<h3>Total Results</h3>
+<div class="count">{{ total_count }}</div>
+</a>
+
+<a href="{{ url_for('view_results', category='LOW') }}" class="card low">
+<h3>Normal</h3>
+<div class="count">{{ low_count }}</div>
+</a>
+
+<a href="{{ url_for('view_results', category='MEDIUM') }}" class="card medium">
+<h3>Medium</h3>
+<div class="count">{{ medium_count }}</div>
+</a>
+
+<a href="{{ url_for('view_results', category='HIGH') }}" class="card high">
+<h3>High</h3>
+<div class="count">{{ high_count }}</div>
+</a>
+</div>
+
+<a href="{{ url_for('admin_dashboard') }}"></a>
+
+</body>
+</html>

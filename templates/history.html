@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Screening History</title>
+     <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Your Screening History</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Date</th>
+        <th>Risk Level</th>
+        <th>Score</th>
+    </tr>
+
+    {% for row in history %}
+    <tr>
+        <td>{{ row.created_at }}</td>
+        <td>{{ row.risk_level }}</td>
+        <td>{{ row.score }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="/dashboard">⬅ Back to Dashboard</a>
+
+</body>
+</html>

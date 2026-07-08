@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Glaucoma Screening Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:       #060d1a;
+  --bg2:      #0b1628;
+  --bg3:      #0f1f38;
+  --card:     #111d33;
+  --card2:    #162240;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.13);
+  --text:     #e8edf5;
+  --muted:    #7a8ba8;
+  --dim:      #3d506e;
+  --blue:     #3b82f6;
+  --teal:     #14b8a6;
+  --green:    #10b981;
+  --green-bg: rgba(16,185,129,0.10);
+  --green-bdr:rgba(16,185,129,0.35);
+  --green-txt:#6ee7b7;
+  --amber:    #f59e0b;
+  --amber-bg: rgba(245,158,11,0.10);
+  --amber-bdr:rgba(245,158,11,0.35);
+  --amber-txt:#fcd34d;
+  --red:      #ef4444;
+  --red-bg:   rgba(239,68,68,0.10);
+  --red-bdr:  rgba(239,68,68,0.35);
+  --red-txt:  #fca5a5;
+  --sans:'Sora',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --r:12px; --r-sm:7px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);padding-bottom:80px;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+/* HEADER */
+.hdr{position:relative;overflow:hidden;background:var(--bg2);border-bottom:1px solid var(--border2);}
+.hdr-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.hdr-glow{position:absolute;right:-80px;top:-80px;width:380px;height:380px;background:radial-gradient(circle,rgba(59,130,246,0.12) 0%,transparent 70%);pointer-events:none;}
+.hdr-inner{max-width:1080px;margin:auto;padding:32px 40px 28px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:20px;position:relative;z-index:1;}
+.hdr-left{display:flex;gap:18px;align-items:center;}
+.hdr-icon{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,rgba(59,130,246,0.25),rgba(20,184,166,0.15));border:1px solid rgba(59,130,246,0.4);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 0 20px rgba(59,130,246,0.2),inset 0 1px 0 rgba(255,255,255,0.08);}
+.hdr-title{font-size:20px;font-weight:700;letter-spacing:-0.4px;color:#fff;}
+.hdr-sub{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--teal);margin-top:5px;text-transform:uppercase;}
+.hdr-right{text-align:right;}
+.rid{font-family:var(--mono);font-size:12px;font-weight:600;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);padding:7px 16px;border-radius:var(--r-sm);display:inline-block;letter-spacing:1px;color:#93c5fd;}
+.rdate{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:7px;}
+
+/* DISC BAR */
+.disc-bar{background:rgba(245,158,11,0.07);border-bottom:1px solid rgba(245,158,11,0.2);padding:10px 40px;}
+.disc-inner{max-width:1080px;margin:auto;display:flex;gap:10px;align-items:flex-start;font-size:12px;color:#fcd34d;line-height:1.6;}
+
+/* LAYOUT */
+.wrap{max-width:1080px;margin:0 auto;padding:28px 24px 0;display:flex;flex-direction:column;gap:16px;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color 0.2s;}
+.card:hover{border-color:var(--border2);}
+.card-head{padding:12px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.02);}
+.ctag{font-family:var(--mono);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);font-weight:500;}
+.card-body{padding:22px;}
+
+/* PATIENT */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 48px;}
+@media(max-width:600px){.pgrid{grid-template-columns:1fr;}}
+.prow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.prow:last-child{border-bottom:none;}
+.pkey{color:var(--muted);}
+.pval{color:var(--text);font-weight:500;text-align:right;font-family:var(--mono);font-size:12px;}
+.age-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);border-radius:99px;padding:3px 12px;font-family:var(--mono);font-size:11px;color:#93c5fd;}
+
+/* STAT CARDS */
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:640px){.stat-row{grid-template-columns:repeat(2,1fr);}}
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.stat.s-blue::before{background:linear-gradient(90deg,var(--blue),var(--teal));}
+.stat.s-green::before{background:var(--green);}
+.stat.s-amber::before{background:var(--amber);}
+.stat.s-red::before{background:var(--red);}
+.stat.s-teal::before{background:var(--teal);}
+.stat-val{font-family:var(--mono);font-size:24px;font-weight:600;line-height:1;margin-bottom:6px;}
+.stat.s-blue .stat-val{color:#93c5fd;}
+.stat.s-green .stat-val{color:var(--green-txt);}
+.stat.s-amber .stat-val{color:var(--amber-txt);}
+.stat.s-red .stat-val{color:var(--red-txt);}
+.stat.s-teal .stat-val{color:#5eead4;}
+.stat-label{font-size:11px;color:var(--muted);font-weight:500;}
+.stat-sub{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:2px;}
+
+/* TIMELINE */
+.timeline{display:flex;margin-top:18px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.tl{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--border);background:var(--bg3);}
+.tl:last-child{border-right:none;}
+.tl.on-LOW{background:var(--green-bg);}
+.tl.on-MEDIUM{background:var(--amber-bg);}
+.tl.on-HIGH{background:var(--red-bg);}
+.tl-dot{width:8px;height:8px;border-radius:50%;margin:0 auto 5px;background:var(--dim);}
+.tl-dot.LOW{background:var(--green);box-shadow:0 0 6px var(--green);}
+.tl-dot.MEDIUM{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+.tl-dot.HIGH{background:var(--red);box-shadow:0 0 6px var(--red);}
+.tl-lbl{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--muted);}
+.tl-val{font-size:12px;font-weight:600;color:var(--text);margin-top:2px;}
+
+/* RISK HERO */
+.risk-hero{border-radius:var(--r);padding:28px 26px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;position:relative;overflow:hidden;}
+.risk-hero.LOW{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(16,185,129,0.05));border:1px solid var(--green-bdr);}
+.risk-hero.MEDIUM{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(245,158,11,0.05));border:1px solid var(--amber-bdr);}
+.risk-hero.HIGH{background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(239,68,68,0.05));border:1px solid var(--red-bdr);}
+.risk-hero::after{content:'';position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;pointer-events:none;}
+.risk-hero.LOW::after{background:radial-gradient(circle,rgba(16,185,129,0.12),transparent 70%);}
+.risk-hero.MEDIUM::after{background:radial-gradient(circle,rgba(245,158,11,0.12),transparent 70%);}
+.risk-hero.HIGH::after{background:radial-gradient(circle,rgba(239,68,68,0.14),transparent 70%);}
+.risk-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+.risk-eyebrow.LOW{color:var(--green);}
+.risk-eyebrow.MEDIUM{color:var(--amber);}
+.risk-eyebrow.HIGH{color:var(--red);}
+.risk-word{font-size:60px;font-weight:800;font-family:var(--mono);line-height:1;letter-spacing:-3px;}
+.risk-word.LOW{color:var(--green);text-shadow:0 0 40px rgba(16,185,129,0.4);}
+.risk-word.MEDIUM{color:var(--amber);text-shadow:0 0 40px rgba(245,158,11,0.4);}
+.risk-word.HIGH{color:var(--red);text-shadow:0 0 40px rgba(239,68,68,0.4);}
+.risk-desc{margin-top:10px;font-size:13px;color:var(--muted);line-height:1.7;max-width:480px;}
+.cdr-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:20px 26px;text-align:center;min-width:130px;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+.cdr-lbl{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.cdr-num{font-family:var(--mono);font-size:46px;font-weight:700;line-height:1;color:#fff;}
+.cdr-rng{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:5px;}
+
+/* GAUGE */
+.gauge-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;}
+@media(max-width:560px){.gauge-row{grid-template-columns:1fr;}}
+.gseg{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--bg3);transition:all 0.2s;}
+.gseg.LOW{border-color:var(--green-bdr);background:var(--green-bg);}
+.gseg.MEDIUM{border-color:var(--amber-bdr);background:var(--amber-bg);}
+.gseg.HIGH{border-color:var(--red-bdr);background:var(--red-bg);}
+.gseg.active{outline:2px solid;outline-offset:2px;}
+.gseg.LOW.active{outline-color:var(--green);box-shadow:0 0 12px rgba(16,185,129,0.2);}
+.gseg.MEDIUM.active{outline-color:var(--amber);box-shadow:0 0 12px rgba(245,158,11,0.2);}
+.gseg.HIGH.active{outline-color:var(--red);box-shadow:0 0 12px rgba(239,68,68,0.2);}
+.gdot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.gdot.LOW{background:var(--green);box-shadow:0 0 6px var(--green);}
+.gdot.MEDIUM{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+.gdot.HIGH{background:var(--red);box-shadow:0 0 6px var(--red);}
+.gname{font-family:var(--mono);font-size:11px;font-weight:600;}
+.gname.LOW{color:var(--green-txt);}
+.gname.MEDIUM{color:var(--amber-txt);}
+.gname.HIGH{color:var(--red-txt);}
+.grange{font-family:var(--mono);font-size:10px;color:var(--muted);}
+
+/* ALERT */
+.alert-box{display:flex;gap:14px;align-items:flex-start;background:var(--red-bg);border:1px solid var(--red-bdr);border-radius:var(--r-sm);padding:14px 18px;margin-top:14px;}
+.alert-title{font-size:13px;font-weight:600;color:var(--red-txt);margin-bottom:3px;}
+.alert-msg{font-size:13px;color:#fca5a5;line-height:1.65;}
+
+/* INTERP */
+.interp{margin-top:16px;background:rgba(59,130,246,0.07);border-left:3px solid var(--blue);border-radius:0 var(--r-sm) var(--r-sm) 0;padding:15px 18px;font-size:13px;line-height:1.85;color:#cbd5e1;}
+.interp strong{color:#e2e8f0;}
+
+/* TABLE */
+.tw{overflow-x:auto;border-radius:var(--r);overflow:hidden;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;}
+thead th{background:var(--bg3);color:#94a3b8;padding:12px 16px;text-align:left;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid var(--border2);}
+tbody td{padding:13px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(255,255,255,0.02);}
+.pill{display:inline-block;padding:3px 11px;border-radius:99px;font-family:var(--mono);font-size:10px;font-weight:500;}
+.pill.LOW{background:var(--green-bg);color:var(--green-txt);border:1px solid var(--green-bdr);}
+.pill.MEDIUM{background:var(--amber-bg);color:var(--amber-txt);border:1px solid var(--amber-bdr);}
+.pill.HIGH{background:var(--red-bg);color:var(--red-txt);border:1px solid var(--red-bdr);}
+.pill.ok{background:rgba(59,130,246,0.1);color:#93c5fd;border:1px solid rgba(59,130,246,0.3);}
+
+/* PIPELINE */
+.steps-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+@media(max-width:800px){.steps-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:480px){.steps-grid{grid-template-columns:repeat(2,1fr);}}
+.step-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;transition:border-color 0.2s,box-shadow 0.2s,transform 0.2s;cursor:pointer;}
+.step-card:hover{border-color:rgba(59,130,246,0.4);box-shadow:0 4px 20px rgba(59,130,246,0.15);transform:translateY(-3px);}
+.step-img{
+    width:100%;
+    height:180px;
+    object-fit:contain;
+    background:#000;
+    border-bottom:1px solid var(--border);
+    display:block;
+    padding:5px;
+}border-bottom:1px solid var(--border);background:var(--bg2);display:block;opacity:0.85;}
+.step-body{padding:10px;}
+.step-num{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);}
+.step-name{font-size:11px;font-weight:600;color:#e2e8f0;margin:3px 0 2px;}
+.step-why{font-size:10px;color:var(--muted);line-height:1.45;}
+
+/* REC */
+.rec-meta{font-size:12px;color:var(--muted);margin-bottom:16px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.rec-chip{font-family:var(--mono);font-size:10px;font-weight:500;padding:2px 10px;border-radius:99px;background:rgba(59,130,246,0.1);color:#93c5fd;border:1px solid rgba(59,130,246,0.25);}
+.rec-chip.warn{background:var(--amber-bg);color:var(--amber-txt);border-color:var(--amber-bdr);}
+.rec-chip.danger{background:var(--red-bg);color:var(--red-txt);border-color:var(--red-bdr);}
+.rec-points{display:flex;flex-direction:column;gap:10px;}
+.rec-point{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--bg3);transition:border-color 0.2s;}
+.rec-point:hover{border-color:var(--border2);}
+.rec-point.LOW{border-color:var(--green-bdr);background:var(--green-bg);}
+.rec-point.MEDIUM{border-color:var(--amber-bdr);background:var(--amber-bg);}
+.rec-point.HIGH{border-color:var(--red-bdr);background:var(--red-bg);}
+.rec-num{font-family:var(--mono);font-size:11px;font-weight:600;flex-shrink:0;padding-top:2px;min-width:22px;}
+.rec-num.LOW{color:var(--green-txt);}
+.rec-num.MEDIUM{color:var(--amber-txt);}
+.rec-num.HIGH{color:var(--red-txt);}
+.rec-text{font-size:13px;line-height:1.75;}
+.rec-text.LOW{color:var(--green-txt);}
+.rec-text.MEDIUM{color:var(--amber-txt);}
+.rec-text.HIGH{color:var(--red-txt);}
+
+/* INFO BLOCK */
+.info-block{padding:18px 20px;border-radius:var(--r-sm);font-size:13px;line-height:2.1;border-left:3px solid;}
+.info-block.LOW{background:var(--green-bg);border-color:var(--green);color:var(--green-txt);}
+.info-block.MEDIUM{background:var(--amber-bg);border-color:var(--amber);color:var(--amber-txt);}
+.info-block.HIGH{background:var(--red-bg);border-color:var(--red);color:var(--red-txt);}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{padding:11px 24px;border:none;border-radius:var(--r-sm);font-size:13px;font-family:var(--sans);font-weight:600;cursor:pointer;transition:all 0.2s;letter-spacing:0.2px;}
+.btn-p{background:var(--blue);color:white;box-shadow:0 2px 16px rgba(59,130,246,0.35);}
+.btn-p:hover{background:#2563eb;transform:translateY(-1px);box-shadow:0 4px 20px rgba(59,130,246,0.45);}
+.btn-o{background:var(--card2);color:var(--text);border:1px solid var(--border2);}
+.btn-o:hover{background:var(--bg3);border-color:rgba(255,255,255,0.2);}
+
+/* FOOTER */
+.disc-footer{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);padding:14px 18px;border-radius:var(--r);font-size:12px;color:#fcd34d;line-height:1.65;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.card{animation:fadeUp 0.45s cubic-bezier(0.23,1,0.32,1) both;}
+.card:nth-child(1){animation-delay:.04s}.card:nth-child(2){animation-delay:.09s}
+.card:nth-child(3){animation-delay:.14s}.card:nth-child(4){animation-delay:.19s}
+.card:nth-child(5){animation-delay:.24s}.card:nth-child(6){animation-delay:.29s}
+.card:nth-child(7){animation-delay:.34s}.card:nth-child(8){animation-delay:.39s}
+.card:nth-child(9){animation-delay:.44s}
+
+@media print{body{background:white;color:#000;}.hdr{background:#060d1a !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.btn-row{display:none;}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-grid"></div>
+  <div class="hdr-glow"></div>
+  <div class="hdr-inner">
+    <div class="hdr-left">
+      <div class="hdr-icon">🩺</div>
+      <div>
+        <div class="hdr-title">AI Glaucoma Risk Screening Report</div>
+        <div class="hdr-sub">Childhood Glaucoma Screening · CNN + CDR Hybrid Analysis</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="rid">{{ result.report_id }}</div>
+      <div class="rdate">{{ result.created_at.strftime("%d %b %Y · %H:%M IST") }}</div>
+    </div>
+  </div>
+</div>
+
+<div class="disc-bar">
+  <div class="disc-inner">
+    <span style="flex-shrink:0;font-size:15px;margin-top:1px;">⚠️</span>
+    <span><strong>Medical Disclaimer:</strong> This is a <strong>preliminary screening tool only</strong> — not a clinical diagnosis. All results must be reviewed and confirmed by a qualified ophthalmologist before any medical decision is made.</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- 1. PATIENT INFO -->
+  <div class="card">
+    <div class="card-head">
+      <span class="ctag">Patient Information</span>
+      <span class="age-pill" id="ageBadge" style="display:none;">👦 Age: <span id="ageVal">—</span> yrs</span>
+    </div>
+    <div class="card-body">
+      <div class="pgrid">
+        <div>
+          <div class="prow"><span class="pkey">Full Name</span><span class="pval">{{ result.patient_name }}</span></div>
+          <div class="prow"><span class="pkey">Date of Birth</span><span class="pval">{{ result.patient_dob }}</span></div>
+          <div class="prow"><span class="pkey">Model Used</span><span class="pval">CNN Glaucoma Detection</span></div>
+        </div>
+        <div>
+          <div class="prow"><span class="pkey">Email</span><span class="pval">{{ result.patient_email }}</span></div>
+          <div class="prow"><span class="pkey">Screening Time</span><span class="pval">{{ result.created_at.strftime("%H:%M IST") }}</span></div>
+          <div class="prow"><span class="pkey">Technique</span><span class="pval">Hybrid (CNN + CDR)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SCAN SUMMARY -->
+  <div class="card">
+    <div class="card-head"><span class="ctag">Scan Quality &amp; Analysis Summary</span></div>
+    <div class="card-body">
+      <div class="stat-row">
+        <div class="stat s-blue">
+          <div class="stat-val">{{ result.cdr }}</div>
+          <div class="stat-label">CDR Value</div>
+          <div class="stat-sub">Cup-to-Disc Ratio</div>
+        </div>
+        
+        <div class="stat {% if result.risk == 'LOW' %}s-green{% elif result.risk == 'MEDIUM' %}s-amber{% else %}s-red{% endif %}">
+          <div class="stat-val" style="font-size:18px;margin-top:4px;">{{ result.risk }}</div>
+          <div class="stat-label">Risk Level</div>
+          <div class="stat-sub">Clinical Assessment</div>
+        </div>
+        <div class="stat s-teal">
+          <div class="stat-val">6</div>
+          <div class="stat-label">Pipeline Steps</div>
+          <div class="stat-sub">Image Processing</div>
+        </div>
+      </div>
+      <div style="margin-top:6px;">
+        <div style="font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;margin-top:18px;">Follow-up Timeline</div>
+        <div class="timeline">
+          {% if result.risk == "LOW" %}
+          <div class="tl on-LOW"><div class="tl-dot LOW"></div><div class="tl-lbl">TODAY</div><div class="tl-val">Screened</div></div>
+          <div class="tl"><div class="tl-dot"></div><div class="tl-lbl">+6 MONTHS</div><div class="tl-val">Optional</div></div>
+          <div class="tl on-LOW"><div class="tl-dot LOW"></div><div class="tl-lbl">+12 MONTHS</div><div class="tl-val">Routine Check</div></div>
+          <div class="tl"><div class="tl-dot"></div><div class="tl-lbl">ONGOING</div><div class="tl-val">Annual</div></div>
+          {% elif result.risk == "MEDIUM" %}
+          <div class="tl on-MEDIUM"><div class="tl-dot MEDIUM"></div><div class="tl-lbl">TODAY</div><div class="tl-val">Screened</div></div>
+          <div class="tl on-MEDIUM"><div class="tl-dot MEDIUM"></div><div class="tl-lbl">WITHIN 1 MONTH</div><div class="tl-val">Book Appt</div></div>
+          <div class="tl on-MEDIUM"><div class="tl-dot MEDIUM"></div><div class="tl-lbl">3–6 MONTHS</div><div class="tl-val">Consultation</div></div>
+          <div class="tl"><div class="tl-dot"></div><div class="tl-lbl">ONGOING</div><div class="tl-val">Monitor</div></div>
+          {% else %}
+          <div class="tl on-HIGH"><div class="tl-dot HIGH"></div><div class="tl-lbl">TODAY</div><div class="tl-val">Screened</div></div>
+          <div class="tl on-HIGH"><div class="tl-dot HIGH"></div><div class="tl-lbl">IMMEDIATELY</div><div class="tl-val">Call Specialist</div></div>
+          <div class="tl on-HIGH"><div class="tl-dot HIGH"></div><div class="tl-lbl">WITHIN 72 HRS</div><div class="tl-val">Full Exam</div></div>
+          <div class="tl on-HIGH"><div class="tl-dot HIGH"></div><div class="tl-lbl">ONGOING</div><div class="tl-val">IOP Monitoring</div></div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. CLINICAL ASSESSMENT -->
+  <div class="card">
+    <div class="card-head"><span class="ctag">Clinical Assessment — Risk Classification</span></div>
+    <div class="card-body">
+      <div class="risk-hero {{ result.risk }}">
+        <div>
+          <div class="risk-eyebrow {{ result.risk }}">Overall Risk Level</div>
+          <div class="risk-word {{ result.risk }}">{{ result.risk }}</div>
+          <div class="risk-desc">
+            {% if result.risk == "LOW" %}No significant glaucomatous changes detected. Routine annual monitoring is advised as a precautionary measure.
+            {% elif result.risk == "MEDIUM" %}Borderline optic nerve changes observed. Clinical follow-up with an ophthalmologist is required within 3–6 months.
+            {% else %}Significant optic nerve damage risk detected. Immediate specialist consultation is critical — glaucoma vision loss is irreversible.{% endif %}
+          </div>
+        </div>
+        <div class="cdr-box">
+          <div class="cdr-lbl">CDR Value</div>
+          <div class="cdr-num">{{ result.cdr }}</div>
+          <div class="cdr-rng">{% if result.risk == "LOW" %}Normal (&lt;0.50){% elif result.risk == "MEDIUM" %}Borderline (0.50–0.70){% else %}Elevated (&gt;0.70){% endif %}</div>
+        </div>
+      </div>
+      <div class="gauge-row">
+        <div class="gseg LOW {% if result.risk == 'LOW' %}active{% endif %}">
+          <div class="gdot LOW"></div><div><div class="gname LOW">LOW RISK</div><div class="grange">CDR &lt; 0.50</div></div>
+        </div>
+        <div class="gseg MEDIUM {% if result.risk == 'MEDIUM' %}active{% endif %}">
+          <div class="gdot MEDIUM"></div><div><div class="gname MEDIUM">MEDIUM RISK</div><div class="grange">CDR 0.50 – 0.70</div></div>
+        </div>
+        <div class="gseg HIGH {% if result.risk == 'HIGH' %}active{% endif %}">
+          <div class="gdot HIGH"></div><div><div class="gname HIGH">HIGH RISK</div><div class="grange">CDR &gt; 0.70</div></div>
+        </div>
+      </div>
+      {% if result.warning %}
+      <div class="alert-box">
+        <span style="font-size:18px;flex-shrink:0;">🔴</span>
+        <div>
+          <div class="alert-title">Clinical Alert — Mixed Signal Detected</div>
+          <div class="alert-msg">{{ result.warning }}<br><strong>Action Required:</strong> Consult an ophthalmologist for comprehensive fundus examination immediately.</div>
+        </div>
+      </div>
+      {% endif %}
+      <div class="interp">
+        <strong>Clinical Interpretation:</strong><br>
+        {% if result.risk == "LOW" %}The Cup-to-Disc Ratio (CDR) of <strong>{{ result.cdr }}</strong> falls within the clinically accepted normal range (&lt;0.50). The CNN model classified the optic disc as <strong>NORMAL</strong>. No significant glaucomatous changes detected. Annual monitoring recommended.
+        {% elif result.risk == "MEDIUM" %}The CDR of <strong>{{ result.cdr }}</strong> falls in the borderline range (0.50–0.70), indicating moderate optic nerve cupping. Possible early glaucomatous changes may be present. Ophthalmologist consultation within <strong>3–6 months</strong> is strongly advised.
+        {% else %}The CDR of <strong>{{ result.cdr }}</strong> exceeds 0.70, indicating significant optic nerve cupping consistent with glaucomatous damage. <strong>Immediate comprehensive ophthalmic evaluation is critical</strong> — glaucoma-related vision loss is irreversible if untreated.{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. CLINICAL RESULTS TABLE -->
+  <div class="card">
+    <div class="card-head"><span class="ctag">Clinical Results &amp; Model Output</span></div>
+    <div class="card-body">
+      <div class="tw">
+        <table>
+          <thead><tr><th>Parameter</th><th>Observed Value</th><th>Status</th><th>Interpretation</th></tr></thead>
+          <tbody>
+            
+            <tr>
+              <td><strong style="color:#e2e8f0;">Cup-to-Disc Ratio</strong></td>
+              <td><span style="font-family:var(--mono);font-size:17px;font-weight:700;color:#fff;">{{ result.cdr }}</span></td>
+              <td><span class="pill {{ result.risk }}">{{ result.risk }}</span></td>
+              <td style="color:var(--muted);">{% if result.risk == "LOW" %}Within normal range — CDR &lt; 0.50{% elif result.risk == "MEDIUM" %}Borderline optic nerve cupping — CDR 0.50–0.70{% else %}Elevated cupping — CDR &gt; 0.70{% endif %}</td>
+            </tr>
+            <tr>
+  <td><strong style="color:#e2e8f0;">Reference Standard</strong></td>
+  
+  <td style="color:var(--muted);">
+    CDR Clinical Guidelines
+  </td>
+
+  <td>
+    <span class="pill ok">Validated</span>
+  </td>
+
+  <td style="color:var(--muted);">
+    Established ophthalmology CDR norms and clinical thresholds
+  </td>
+</tr>
+            <tr>
+              <td><strong style="color:#e2e8f0;">Analysis Technique</strong></td>
+              <td style="color:var(--muted);">Hybrid CNN + CDR</td>
+              <td><span class="pill ok">Completed</span></td>
+              <td style="color:var(--muted);">Dual-method validation reduces false-positive rate</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. PIPELINE -->
+  <div class="card">
+    <div class="card-head"><span class="ctag">Image Processing Pipeline — 6-Stage Analysis</span></div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.65;">The fundus image passes through 6 automated preprocessing stages before CDR calculation. Each stage refines the image to isolate and measure the optic disc with precision.</p>
+      <div class="steps-grid">
+        <div class="step-card"><img class="step-img" src="/static/steps/1_original.jpg" alt=""><div class="step-body"><div class="step-num">Step 01</div><div class="step-name">Image Captured</div><div class="step-why">Raw webcam or uploaded frame — starting point for all processing.</div></div></div>
+        <div class="step-card"><img class="step-img" src="/static/steps/2_grayscale.jpg" alt=""><div class="step-body"><div class="step-num">Step 02</div><div class="step-name">Grayscale</div><div class="step-why">Converts to single channel. Removes colour noise, retains structure.</div></div></div>
+        <div class="step-card"><img class="step-img" src="/static/steps/3_blur.jpg" alt=""><div class="step-body"><div class="step-num">Step 03</div><div class="step-name">Noise Removal</div><div class="step-why">Gaussian blur smooths pixel noise for cleaner disc edges.</div></div></div>
+        <div class="step-card"><img class="step-img" src="/static/steps/4_threshold.jpg"  alt=""><div class="step-body"><div class="step-num">Step 04</div><div class="step-name">Binary Threshold</div><div class="step-why">Separates foreground disc structures from background tissue.</div></div></div>
+        <div class="step-card"><img class="step-img" src="/static/steps/5_eye_region.jpg" alt=""><div class="step-body"><div class="step-num">Step 05</div><div class="step-name">Eye Region</div><div class="step-why">Haar cascade isolates the eye ROI from surrounding facial area.</div></div></div>
+        <div class="step-card"><img class="step-img" src="/static/steps/6_final_detection.jpg" alt=""><div class="step-body"><div class="step-num">Step 06</div><div class="step-name">Cup Detected</div><div class="step-why">Largest contour = optic cup. CDR computed from cup/disc area ratio.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. PERSONALISED RECOMMENDATION -->
+  <div class="card">
+    <div class="card-head"><span class="ctag">Personalised Recommendation — Age, Symptoms &amp; CDR</span></div>
+    <div class="card-body">
+      <div id="recBox"><p style="font-size:13px;color:var(--muted);">ⓘ Symptom data not available. Complete the questionnaire on the scan page to get a personalised recommendation.</p></div>
+    </div>
+  </div>
+
+  <!-- 7. CLINICAL RECOMMENDATION -->
+  <div class="card">
+    <div class="card-head"><span class="ctag">Clinical Recommendation</span></div>
+    <div class="card-body">
+      <div class="info-block {{ result.risk }}">
+        {% if result.risk == "LOW" %}✅ <strong>Routine annual eye examination is recommended.</strong><br>No immediate clinical intervention required. Monitor for any symptom changes and repeat screening in 12 months.
+        {% elif result.risk == "MEDIUM" %}⚠️ <strong>Ophthalmologist consultation advised within 3–6 months.</strong><br>Do not ignore borderline CDR values — early intervention significantly reduces risk of permanent vision loss. Book a tonometry and visual field test soon.
+        {% else %}🔴 <strong>Immediate comprehensive ophthalmic evaluation is critical.</strong><br>High CDR with glaucomatous pattern detected. Vision loss from glaucoma is <strong>irreversible</strong> — early treatment can halt progression. Book an emergency ophthalmology appointment today.{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. PREVENTION -->
+  <div class="card">
+    <div class="card-head"><span class="ctag">Prevention &amp; Eye Care Guidelines</span></div>
+    <div class="card-body">
+      <div class="info-block {{ result.risk }}">
+        {% if result.risk == "LOW" %}✔ Follow the 20-20-20 rule — every 20 min, look 20 ft away for 20 seconds<br>✔ Maintain limited screen time and take regular breaks<br>✔ Eat a diet rich in leafy greens, omega-3 foods, and antioxidants<br>✔ Protect eyes from UV exposure with quality polarised sunglasses<br>✔ Schedule yearly comprehensive eye examinations with fundus check
+        {% elif result.risk == "MEDIUM" %}✔ Reduce prolonged screen and digital device exposure significantly<br>✔ Monitor blood pressure and blood sugar levels regularly<br>✔ Avoid heavy lifting and positions that raise intraocular pressure<br>✔ Report any sudden vision changes or eye pain to a doctor immediately<br>✔ Consult an ophthalmologist within 3 months for tonometry and OCT scan
+        {% else %}⚠ Immediate specialist consultation is mandatory — do not delay treatment<br>⚠ Follow prescribed intraocular pressure (IOP) treatment plan strictly<br>⚠ Avoid all activities that raise eye pressure (heavy lifting, breath-holding)<br>⚠ Regular IOP monitoring and visual field testing are required ongoing<br>⚠ Glaucoma vision loss is permanent — early treatment is the only effective solution{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row">
+    <button class="btn btn-p" onclick="window.print()">🖨 Print / Save as PDF</button>
+    <button class="btn btn-o" onclick="window.location.href='{{ '/upload' if result.scan_type == 'Upload' else '/scan' }}'">← New Scan</button>
+    <button class="btn btn-o" onclick="window.location.href='/history'">📋 Full History</button>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="disc-footer">⚠ <strong>Disclaimer:</strong> This AI-based glaucoma screening system is intended solely for <strong>preliminary risk assessment</strong>. It does not constitute a medical diagnosis and must not be used as the sole basis for any clinical decision. All findings must be reviewed and confirmed by a <strong>qualified ophthalmologist</strong>. The developers and institution accept no liability for clinical decisions made solely on this report.</div>
+
+</div>
+
+<script>
+const CDR=parseFloat("{{ result.cdr }}")||0;
+const RISK="{{ result.risk }}";
+const raw=sessionStorage.getItem('symptomData');
+const recBox=document.getElementById('recBox');
+
+function buildRec(s){
+  const age=parseInt(s.age)||0,family=parseInt(s.family)||0,pain=parseInt(s.pain)||0,
+        vision=parseInt(s.vision)||0,light=parseInt(s.light)||0,nausea=parseInt(s.nausea)||0;
+  const pts=[];
+  if(age<5) pts.push('Child is under 5 years — paediatric ophthalmologist referral is strongly advised regardless of CDR value, as congenital glaucoma can progress rapidly at this age.');
+  else if(age<=10) pts.push('Child is between 5–10 years, a critical period for visual development. Any optic nerve abnormality at this age warrants prompt attention to prevent amblyopia or permanent vision impairment.');
+  else if(age<=17) pts.push('Adolescent patient (11–17 yrs). Juvenile open-angle glaucoma can be asymptomatic — do not rely on symptoms alone; CDR measurement and IOP check are essential at this stage.');
+  if(CDR<0.5) pts.push('CDR of '+CDR+' is within the normal range. No structural optic disc concern detected at this time. Continue annual fundus screening to track any change over time.');
+  else if(CDR<=0.7) pts.push('CDR of '+CDR+' is in the borderline zone (0.50–0.70). Even without a confirmed diagnosis, a repeat scan in 3–6 months along with IOP measurement is recommended to rule out progression.');
+  else pts.push('CDR of '+CDR+' is elevated (above 0.70). This level of optic nerve cupping requires immediate clinical evaluation including IOP measurement, visual field testing (perimetry), and OCT optic nerve analysis.');
+  if(family) pts.push('Family history of glaucoma is present — the single strongest risk factor for this condition. Even with a normal scan today, this patient should be screened every 6 months and monitored lifelong.');
+  if(pain&&vision) pts.push('Both eye pain and blurred vision are reported together — this combination can indicate acute elevated intraocular pressure. Seek same-day ophthalmic evaluation; do not wait for a scheduled appointment.');
+  else if(pain) pts.push('Eye pain is reported. Combined with CDR of '+CDR+', this may indicate elevated intraocular pressure. An IOP check (tonometry) is advised as soon as possible.');
+  else if(vision) pts.push('Blurred or reduced vision is reported. This warrants a comprehensive refraction test alongside the glaucoma assessment to distinguish refractive error from optic nerve-related vision change.');
+  if(light) pts.push('Light sensitivity (photophobia) is present. In a child, this can indicate elevated IOP or corneal involvement. The ophthalmologist should specifically assess the cornea and anterior chamber.');
+  if(nausea) pts.push('Nausea alongside eye symptoms can be associated with acute angle-closure glaucoma. The ophthalmologist should evaluate the drainage angle (gonioscopy) during consultation.');
+  if(!pain&&!vision&&!light&&!nausea&&!family) pts.push('No acute symptoms reported currently. While reassuring, glaucoma in children is often asymptomatic in early stages — periodic screening remains important given the CDR reading of '+CDR+'.');
+  if(RISK==='LOW'&&!family&&CDR<0.5) pts.push('Overall, no immediate action is required. Schedule the next screening in 12 months and maintain general eye health: limited screen time, UV protection, and a balanced diet.');
+  else if(RISK==='HIGH'||CDR>0.7) pts.push('Given the elevated CDR and AI flag, this report should be presented to an ophthalmologist within the next 48–72 hours. Print or save this report and bring it to the consultation.');
+  else pts.push('Please present this report to an ophthalmologist within the next 1–3 months. Early detection and treatment significantly improve long-term visual outcomes.');
+  document.getElementById('ageBadge').style.display='inline-flex';
+  document.getElementById('ageVal').textContent=age;
+  const chips=[
+    `<span class="rec-chip">Age: ${age} yrs</span>`,
+    `<span class="rec-chip">CDR: ${CDR}</span>`,
+    family?`<span class="rec-chip warn">Family Hx ✓</span>`:'',
+    pain?`<span class="rec-chip danger">Eye Pain ✓</span>`:'',
+    vision?`<span class="rec-chip danger">Blurred Vision ✓</span>`:'',
+    light?`<span class="rec-chip warn">Photophobia ✓</span>`:'',
+    nausea?`<span class="rec-chip warn">Nausea ✓</span>`:'',
+  ].filter(Boolean).join('');
+  recBox.innerHTML=`<div class="rec-meta">${chips}</div><div class="rec-points">${pts.map((p,i)=>`<div class="rec-point ${RISK}"><span class="rec-num ${RISK}">${String(i+1).padStart(2,'0')}</span><span class="rec-text ${RISK}">${p}</span></div>`).join('')}</div>`;
+}
+if(raw){
+
+  try{
+    buildRec(JSON.parse(raw));
+  }
+
+  catch(e){
+    recBox.innerHTML =
+    '<p style="font-size:13px;color:var(--muted);">ⓘ Could not parse symptom data.</p>';
+  }
+
+}
+
+else{
+
+  let defaultData = {
+    age: 20,
+    family: 0,
+    pain: 0,
+    vision: 0,
+    light: 0,
+    nausea: 0
+  };
+
+  buildRec(defaultData);
+}
+</script>
+</body>
+</html>

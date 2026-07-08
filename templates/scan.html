@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Glaucoma Scanner</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:   #0a1628;
+  --blue:   #1a56db;
+  --green:  #059669;
+  --amber:  #d97706;
+  --red:    #dc2626;
+  --white:  #ffffff;
+  --muted:  rgba(255,255,255,0.55);
+  --card:   rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.15);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  min-height:100vh;
+  background:
+    linear-gradient(rgba(10,22,40,0.7), rgba(10,22,40,0.7)),
+    url("/static/AI-powered glaucoma risk screening system.png")
+    center/cover no-repeat;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:30px 16px;
+}
+
+/* ── MAIN CARD ── */
+.card{
+  width:100%;
+  max-width:560px;
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.45);
+  color: white;
+}
+
+/* ── HEADER ── */
+.card-header{
+  background: linear-gradient(135deg, rgba(26,86,219,0.6), rgba(10,22,40,0.4));
+  border-bottom: 1px solid var(--border);
+  padding: 28px 32px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.header-icon{
+  width:48px; height:48px;
+  background: rgba(255,255,255,0.12);
+  border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px;
+  flex-shrink:0;
+}
+.header-text h2{
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:-0.2px;
+}
+.header-text p{
+  font-size:12px;
+  color: var(--muted);
+  margin-top:3px;
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.5px;
+}
+
+/* ── STEP INDICATOR ── */
+.step-bar{
+  display:flex;
+  align-items:center;
+  padding:18px 32px;
+  border-bottom:1px solid var(--border);
+  gap:0;
+}
+.step{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:1;
+}
+.step-dot{
+  width:28px; height:28px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px;
+  font-weight:700;
+  border:2px solid rgba(255,255,255,0.2);
+  color: var(--muted);
+  transition:all 0.3s;
+  flex-shrink:0;
+}
+.step-dot.active{
+  background:var(--blue);
+  border-color:var(--blue);
+  color:white;
+  box-shadow:0 0 0 3px rgba(26,86,219,0.3);
+}
+.step-dot.done{
+  background:var(--green);
+  border-color:var(--green);
+  color:white;
+}
+.step-label{
+  font-size:11px;
+  font-weight:600;
+  color:var(--muted);
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  transition:color 0.3s;
+}
+.step-label.active{ color:white; }
+.step-line{
+  flex:1;
+  height:2px;
+  background:rgba(255,255,255,0.1);
+  margin:0 8px;
+}
+
+/* ── BODY ── */
+.card-body{ padding:28px 32px; }
+
+/* ══ STEP 1: QUESTIONNAIRE ══ */
+#stepQuestion{ display:block; }
+
+.q-intro{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.7;
+  margin-bottom:22px;
+  padding:12px 16px;
+  background:rgba(26,86,219,0.15);
+  border-left:3px solid var(--blue);
+  border-radius:0 8px 8px 0;
+}
+
+.q-list{ display:flex; flex-direction:column; gap:14px; }
+
+.q-row{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.q-row label{
+  font-size:13px;
+  font-weight:600;
+  color:rgba(255,255,255,0.85);
+}
+.q-row input[type="number"],
+.q-row select{
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
+  border-radius:10px;
+  padding:10px 14px;
+  font-size:14px;
+  color:white;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  outline:none;
+  transition:border 0.2s, background 0.2s;
+  appearance:none;
+  -webkit-appearance:none;
+}
+.q-row input[type="number"]::placeholder{ color:rgba(255,255,255,0.3); }
+.q-row input[type="number"]:focus,
+.q-row select:focus{
+  border-color:var(--blue);
+  background:rgba(26,86,219,0.15);
+}
+.q-row select option{ background:#0f2044; color:white; }
+
+/* toggle radio for yes/no */
+.toggle-group{
+  display:flex;
+  gap:8px;
+}
+.toggle-group input[type="radio"]{ display:none; }
+.toggle-group label{
+  flex:1;
+  text-align:center;
+  padding:9px 0;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  color:rgba(255,255,255,0.6);
+  background:rgba(255,255,255,0.05);
+  transition:all 0.2s;
+  user-select:none;
+}
+.toggle-group input[type="radio"]:checked + label{
+  background:var(--blue);
+  border-color:var(--blue);
+  color:white;
+  box-shadow:0 0 0 2px rgba(26,86,219,0.35);
+}
+
+.submit-btn{
+  margin-top:22px;
+  width:100%;
+  padding:14px;
+  background:linear-gradient(135deg,#1a56db,#0ea5e9);
+  color:white;
+  border:none;
+  border-radius:12px;
+  font-size:15px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-weight:700;
+  cursor:pointer;
+  letter-spacing:0.3px;
+  transition:opacity 0.2s, transform 0.15s;
+  box-shadow:0 6px 20px rgba(26,86,219,0.4);
+}
+.submit-btn:hover{ opacity:0.9; transform:translateY(-1px); }
+.submit-btn:active{ transform:translateY(0); }
+
+/* ══ STEP 2: SCANNER ══ */
+#stepScan{ display:none; }
+
+#videoStream{
+  width:100%;
+  border-radius:14px;
+  border:2px solid var(--border);
+  margin-bottom:20px;
+  display:none;
+  background:#000;
+}
+
+.scan-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  font-size:15px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-weight:700;
+  cursor:pointer;
+  transition:all 0.2s;
+  letter-spacing:0.3px;
+}
+.start-btn{
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+  color:white;
+  box-shadow:0 6px 20px rgba(0,114,255,0.35);
+}
+.start-btn:hover{ opacity:0.9; transform:translateY(-1px); }
+.start-btn:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+  transform:none;
+}
+.report-btn{
+  background:linear-gradient(135deg,#43e97b,#38f9d7);
+  color:#0a2010;
+  display:none;
+  margin-top:12px;
+  box-shadow:0 6px 20px rgba(56,249,215,0.3);
+}
+.report-btn:hover{ opacity:0.9; transform:translateY(-1px); }
+
+/* status boxes */
+.status-box{
+  display:none;
+  margin-top:18px;
+  padding:20px 22px;
+  border-radius:14px;
+  text-align:center;
+}
+#completeBox{
+  background:rgba(5,150,105,0.15);
+  border:1px solid rgba(5,150,105,0.35);
+}
+#completeBox h3{ color:#34d399; font-size:16px; margin-bottom:4px; }
+#completeBox p { color:rgba(255,255,255,0.7); font-size:13px; }
+
+#errorBox{
+  background:rgba(220,38,38,0.15);
+  border:1px solid rgba(220,38,38,0.35);
+}
+#errorBox h3{ color:#f87171; font-size:16px; margin-bottom:4px; }
+#errorBox p { color:rgba(255,255,255,0.7); font-size:13px; }
+
+/* scanning pulse */
+.pulse-ring{
+  display:none;
+  width:60px; height:60px;
+  margin:0 auto 16px;
+  position:relative;
+}
+.pulse-ring::before, .pulse-ring::after{
+  content:'';
+  position:absolute; inset:0;
+  border-radius:50%;
+  border:3px solid #0072ff;
+  animation:pulse 1.4s ease-out infinite;
+}
+.pulse-ring::after{ animation-delay:0.7s; }
+@keyframes pulse{
+  0%  { transform:scale(0.8); opacity:1; }
+  100%{ transform:scale(1.6); opacity:0; }
+}
+.pulse-icon{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px;
+}
+
+/* ── FOOTER ── */
+.card-footer{
+  padding:14px 32px;
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.card-footer span{
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(12px); }
+  to  { opacity:1; transform:none; }
+}
+.card{ animation:fadeUp 0.4s ease both; }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- HEADER -->
+  <div class="card-header">
+    <div class="header-icon">👁</div>
+    <div class="header-text">
+      <h2>AI Glaucoma Risk Screening</h2>
+      <p>CHILDHOOD GLAUCOMA DETECTION SYSTEM</p>
+    </div>
+  </div>
+
+  <!-- STEP BAR -->
+  <div class="step-bar">
+    <div class="step">
+      <div class="step-dot active" id="dot1">1</div>
+      <span class="step-label active" id="lbl1">Symptoms</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-dot" id="dot2">2</div>
+      <span class="step-label" id="lbl2">Eye Scan</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-dot" id="dot3">3</div>
+      <span class="step-label" id="lbl3">Report</span>
+    </div>
+  </div>
+
+  <div class="card-body">
+
+    <!-- ══ STEP 1: QUESTIONNAIRE ══ -->
+    <div id="stepQuestion">
+      <div class="q-intro">
+        Fill in the patient's symptoms below. This combines with the AI scan result
+        to give a comprehensive multi-modal risk assessment.
+      </div>
+
+      <div class="q-list">
+
+        <div class="q-row">
+        <label>Patient Age</label>
+        <input type="number" id="qAge" min="1" max="90" placeholder="Enter age" />
+        </div>
+
+        <div class="q-row">
+          <label>Family history of glaucoma?</label>
+          <div class="toggle-group">
+            <input type="radio" name="family" id="fNo"  value="0"  checked/>
+            <label for="fNo">No</label>
+            <input type="radio" name="family" id="fYes" value="1"/>
+            <label for="fYes">Yes</label>
+            <input type="radio" name="family" id="fNs"  value="0.5"/>
+            <label for="fNs">Not sure</label>
+          </div>
+        </div>
+
+        <div class="q-row">
+          <label>Frequent eye pain or headaches?</label>
+          <div class="toggle-group">
+            <input type="radio" name="pain" id="pNo"  value="0" checked/>
+            <label for="pNo">No</label>
+            <input type="radio" name="pain" id="pYes" value="1"/>
+            <label for="pYes">Yes</label>
+          </div>
+        </div>
+
+        <div class="q-row">
+          <label>Blurred or hazy vision?</label>
+          <div class="toggle-group">
+            <input type="radio" name="vision" id="vNo"  value="0" checked/>
+            <label for="vNo">No</label>
+            <input type="radio" name="vision" id="vYes" value="1"/>
+            <label for="vYes">Yes</label>
+          </div>
+        </div>
+
+        <div class="q-row">
+          <label>Sensitivity to light (photophobia)?</label>
+          <div class="toggle-group">
+            <input type="radio" name="light" id="lNo"  value="0" checked/>
+            <label for="lNo">No</label>
+            <input type="radio" name="light" id="lYes" value="1"/>
+            <label for="lYes">Yes</label>
+          </div>
+        </div>
+
+        <div class="q-row">
+          <label>Nausea or vomiting with eye pain?</label>
+          <div class="toggle-group">
+            <input type="radio" name="nausea" id="nNo"  value="0" checked/>
+            <label for="nNo">No</label>
+            <input type="radio" name="nausea" id="nYes" value="1"/>
+            <label for="nYes">Yes</label>
+          </div>
+        </div>
+
+      </div><!-- /q-list -->
+
+      <button class="submit-btn" onclick="submitQuestionnaire()">
+        Continue to Eye Scan →
+      </button>
+    </div><!-- /stepQuestion -->
+
+    <!-- ══ STEP 2: SCANNER ══ -->
+    <div id="stepScan">
+
+      <div class="pulse-ring" id="pulseRing">
+        <div class="pulse-icon">👁</div>
+      </div>
+
+      <img id="videoStream" alt="Camera feed"/>
+
+      <button id="startBtn" class="scan-btn start-btn" onclick="startScan()">
+        Start Eye Scan
+      </button>
+
+      <button id="reportBtn" class="scan-btn report-btn" onclick="generateReport()">
+        View Full Report →
+      </button>
+
+      <div class="status-box" id="completeBox">
+        <h3>✔ Scan Completed</h3>
+        <p>Eye analysis finished successfully. Click above to view your report.</p>
+      </div>
+
+      <div class="status-box" id="errorBox">
+        <h3>❌ Scan Failed</h3>
+        <p>Face / Eye not detected clearly. Please try again in better lighting.</p>
+      </div>
+
+    </div><!-- /stepScan -->
+
+  </div><!-- /card-body -->
+
+  <!-- FOOTER -->
+  <div class="card-footer">
+    <span>⚠️ This tool is for screening only — not a medical diagnosis. Consult an ophthalmologist for clinical evaluation.</span>
+  </div>
+
+</div><!-- /card -->
+
+<script>
+// ── Store symptom answers globally for report use ──
+let symptomData = {};
+let scanInterval = null;
+
+// ══ STEP 1 → STEP 2 ══
+function submitQuestionnaire(){
+
+  // Basic validation
+  const age = parseInt(document.getElementById('qAge').value);
+  if(!age || age < 1 || age > 90){
+    document.getElementById('qAge').style.borderColor = '#ef4444';
+    document.getElementById('qAge').focus();
+    return;
+  }
+  document.getElementById('qAge').style.borderColor = '';
+
+  // Collect answers
+  symptomData = {
+    age:    age,
+    family: parseFloat(document.querySelector('input[name="family"]:checked').value),
+    pain:   parseFloat(document.querySelector('input[name="pain"]:checked').value),
+    vision: parseFloat(document.querySelector('input[name="vision"]:checked').value),
+    light:  parseFloat(document.querySelector('input[name="light"]:checked').value),
+    nausea: parseFloat(document.querySelector('input[name="nausea"]:checked').value),
+  };
+
+  // Save to sessionStorage so report.html can use it
+  sessionStorage.setItem('symptomData', JSON.stringify(symptomData));
+
+  // ── UI Transition ──
+  document.getElementById('stepQuestion').style.display = 'none';
+  document.getElementById('stepScan').style.display     = 'block';
+
+  // Step bar update
+  document.getElementById('dot1').className  = 'step-dot done';
+  document.getElementById('lbl1').className  = 'step-label';
+  document.getElementById('dot2').className  = 'step-dot active';
+  document.getElementById('lbl2').className  = 'step-label active';
+}
+
+// ══ START SCAN ══
+function startScan(){
+
+  const video      = document.getElementById('videoStream');
+  const startBtn   = document.getElementById('startBtn');
+  const reportBtn  = document.getElementById('reportBtn');
+  const completeBox= document.getElementById('completeBox');
+  const errorBox   = document.getElementById('errorBox');
+  const pulseRing  = document.getElementById('pulseRing');
+
+  // Reset UI
+  completeBox.style.display = 'none';
+  errorBox.style.display    = 'none';
+  reportBtn.style.display   = 'none';
+
+  startBtn.innerText  = 'Scanning...';
+  startBtn.disabled   = true;
+  pulseRing.style.display = 'block';
+
+  // Stop old interval
+  if(scanInterval){ clearInterval(scanInterval); }
+
+  // Reset backend
+  fetch('/reset_scanner');
+
+  // Start feed
+  video.src = '';
+  video.src = '/video_feed?t=' + Date.now();
+  video.style.display = 'block';
+
+  // Poll status
+  scanInterval = setInterval(() => {
+
+    fetch('/scanner_status')
+    .then(r => r.json())
+    .then(data => {
+
+      console.log('STATUS:', data);
+
+      if(data.status === 'completed'){
+        clearInterval(scanInterval);
+        video.style.display    = 'none';
+        video.src              = '';
+        pulseRing.style.display= 'none';
+        startBtn.style.display = 'none';
+        completeBox.style.display = 'flex';
+        completeBox.style.display = 'block';
+        reportBtn.style.display   = 'block';
+
+        // Step bar
+        document.getElementById('dot2').className = 'step-dot done';
+        document.getElementById('dot3').className = 'step-dot active';
+        document.getElementById('lbl3').className = 'step-label active';
+      }
+
+      else if(data.status === 'failed'){
+        clearInterval(scanInterval);
+        video.style.display    = 'none';
+        video.src              = '';
+        pulseRing.style.display= 'none';
+        errorBox.style.display = 'block';
+        startBtn.disabled      = false;
+        startBtn.innerText     = 'Rescan';
+      }
+    });
+
+  }, 1500);
+}
+
+// ══ GENERATE REPORT ══
+function generateReport(){
+  // Step bar
+  document.getElementById('dot3').className = 'step-dot done';
+  window.location.href = '/report/webcam';
+}
+</script>
+</body>
+</html>
